@@ -1,1 +1,5 @@
-# project-50-python
+# Project 50
+
+## Goal
+Complete 50 python projects
+
