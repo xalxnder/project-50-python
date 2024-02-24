@@ -5,10 +5,10 @@ nutritionix_api = NutritionixAPI()
 spreadsheet_editor = SpreadsheetEditor()
 
 user_exercise = input('What exercise did you complete today? ')
-nutritionix_api.data_generator(user_exercise)
+exercise_data = nutritionix_api.get_exercise_data(user_exercise)
 
 # To do
 # Pass response from exercise estimator into spreadsheet editor
-spreadsheet_editor.insert()
+# spreadsheet_editor.insert()
 
 
