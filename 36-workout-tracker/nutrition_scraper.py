@@ -6,7 +6,7 @@ class NutritionixAPI():
     def __init__(self):
         self.url = 'https://trackapi.nutritionix.com/v2/natural/exercise'
 
-    def data_generator(self, user_input):
+    def get_exercise_data(self, user_input):
         """
        Args:
            user_input: Details about the exercise
