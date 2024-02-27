@@ -26,4 +26,4 @@ class NutritionixAPI():
         }
 
         response = requests.post(url=self.url, headers=auth_headers, json=body)
-        return response
+        return response.json()
