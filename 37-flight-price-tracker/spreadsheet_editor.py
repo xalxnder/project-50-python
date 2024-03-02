@@ -53,7 +53,6 @@ class SpreadsheetEditor():
             # print(response.json())
         except requests.exceptions.HTTPError as e:
             print('Http Error', e)
-        print(response.json())
         return response.json()
 
     def update_iata_codes(self, row, code):
