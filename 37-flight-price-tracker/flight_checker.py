@@ -2,7 +2,7 @@ import requests
 import os
 
 
-class FlightChecker():
+class FlightChecker:
     def __init__(self):
         self.api_key = os.environ['KIWI_API_KEY']
         self.url = os.environ['KIWI_ENDPOINT']
@@ -22,23 +22,25 @@ class FlightChecker():
         code = results[0]['code']
         return code
 
-    def get_prices(self):
+    def get_prices(self, origin, destination, start_date, end_date):
         head = {
             'apikey': self.api_key,
         }
         parameters = {
-            'fly_from': 'PHL',
-            'fly_to': 'TYO',
-            'date_from': '04/04/2024',
-            'date_to': '04/10/2024',
+            'fly_from': origin,
+            'fly_to': destination,
+            'date_from': start_date,
+            'date_to': end_date,
             'curr': 'USD',
-            'limit': 5,
-            # 'price_from': 0,
-            # 'price_to':485
-            'sort':'price',
-            'max_stopovers': 0
+            'one_for_city': 1,
+            "nights_in_dst_from": 1,
+            "nights_in_dst_to": 28,
+            'max_stopovers': 0,
         }
 
         response = requests.get(url=self.url + 'search', headers=head, params=parameters)
-        print(response.json())
+        print(response.text)
+        data = response.json()['data'][0]
+        print(f"{destination} ${data['price']}")
+        return data
 
