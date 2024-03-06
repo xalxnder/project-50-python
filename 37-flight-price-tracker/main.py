@@ -25,3 +25,15 @@ ORIGIN_IATA = 'PHL'
 for cell in FLIGHTS_SPREADSHEET:
     flight_checker.get_prices(ORIGIN_IATA, cell['iataCode'], TODAY, SIX_MONTHS)
 
+
+
+for cell in FLIGHTS_SPREADSHEET:
+    spreadsheet_price = cell['lowestPrice']
+    try:
+        new_price = flight_checker.prices[cell['iataCode']]
+    except KeyError as e:
+        print('Sorry, no price for that')
+    else:
+        if new_price < spreadsheet_price:
+            print('FOUND LOWER PRICE')
+
