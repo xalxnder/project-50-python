@@ -9,6 +9,15 @@ class FlightChecker:
         self.prices = {}
 
     def get_code(self, city):
+        """
+
+        Args:
+            city: Name of city departure city where airport is located
+
+        Returns:
+            string: IATA code for the city
+
+        """
         head = {
             'apikey': self.api_key,
         }
@@ -24,6 +33,18 @@ class FlightChecker:
         return code
 
     def get_prices(self, origin, destination, start_date, end_date):
+        """
+
+        Args:
+            origin: IATA code of the origin airport
+            destination: IATA code of the destination airport
+            start_date: Date when user plans on departing
+            end_date: Date when user plans on returning
+
+        Returns:
+            dictionary: Destination IATA codes and the cheapest flights
+
+        """
         head = {
             'apikey': self.api_key,
         }
