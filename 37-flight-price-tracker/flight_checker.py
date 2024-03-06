@@ -39,8 +39,14 @@ class FlightChecker:
         }
 
         response = requests.get(url=self.url + 'search', headers=head, params=parameters)
-        print(response.text)
-        data = response.json()['data'][0]
-        print(f"{destination} ${data['price']}")
-        return data
+        try:
+            data = response.json()['data'][0]
+        except IndexError as e:
+            print(e)
+            print(f'Unable to get price for {destination}')
+        else:
+            print(f"{destination} ${data['price']}")
+            return data
+
+
 
