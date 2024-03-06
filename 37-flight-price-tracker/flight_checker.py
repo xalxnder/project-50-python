@@ -6,6 +6,7 @@ class FlightChecker:
     def __init__(self):
         self.api_key = os.environ['KIWI_API_KEY']
         self.url = os.environ['KIWI_ENDPOINT']
+        self.prices = {}
 
     def get_code(self, city):
         head = {
@@ -45,8 +46,6 @@ class FlightChecker:
             print(e)
             print(f'Unable to get price for {destination}')
         else:
-            print(f"{destination} ${data['price']}")
-            return data
-
-
-
+            self.prices.update({
+                                             destination: data['price']})
+            return self.prices
