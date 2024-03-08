@@ -8,7 +8,11 @@ flight_checker = FlightChecker()
 spreadsheet_interface = SpreadsheetInterface()
 PRICES_SPREADSHEET = spreadsheet_interface.read('prices')
 USERS_SPREADSHEET = spreadsheet_interface.read('users')
+FIRST_NAME = input('What is your first name?: ')
+LAST_NAME = input('What is your last name?: ')
+EMAIL = input('What is your email?')
 
+spreadsheet_interface.add_users(FIRST_NAME, LAST_NAME, EMAIL, 'users')
 
 message_sender = MessageSender()
 
@@ -25,19 +29,19 @@ for i in PRICES_SPREADSHEET:
     #     iata_code = flight_checker.get_code(city_column)
     #     spreadsheet_interface.update_iata_codes(row_column, iata_code)
 
-
-for cell in PRICES_SPREADSHEET:
-    flight_checker.get_prices(ORIGIN_IATA, cell['iataCode'], TODAY, SIX_MONTHS)
-
-for cell in PRICES_SPREADSHEET:
-    spreadsheet_price = cell['lowestPrice']
-    try:
-        new_price = flight_checker.prices[cell['iataCode']]
-    except KeyError as e:
-        print('Sorry, no price for that')
-    else:
-        if new_price < spreadsheet_price:
-            message_sender.message += f'Only ${new_price} to fly from {ORIGIN_IATA} to {cell["iataCode"]}\n'
+#
+# for cell in PRICES_SPREADSHEET:
+#     flight_checker.get_prices(ORIGIN_IATA, cell['iataCode'], TODAY, SIX_MONTHS)
+#
+# for cell in PRICES_SPREADSHEET:
+#     spreadsheet_price = cell['lowestPrice']
+#     try:
+#         new_price = flight_checker.prices[cell['iataCode']]
+#     except KeyError as e:
+#         print('Sorry, no price for that')
+#     else:
+#         if new_price < spreadsheet_price:
+#             message_sender.message += f'Only ${new_price} to fly from {ORIGIN_IATA} to {cell["iataCode"]}\n'
 
 print(message_sender.message)
 # message_sender.send_message()
