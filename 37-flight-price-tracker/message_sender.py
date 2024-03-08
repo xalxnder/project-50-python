@@ -7,9 +7,10 @@ class MessageSender:
         self.sender = ''
         self.recipient = ''
         self.password = os.environ['SMTLIB_PASSWORD']
+        self.message = ''
 
-    def send_message(self, message):
-        body = message.encode('utf-8')
+    def send_message(self):
+        body = self.message.encode('utf-8')
         sender = self.sender
         recipient = self.recipient
         password = self.password
