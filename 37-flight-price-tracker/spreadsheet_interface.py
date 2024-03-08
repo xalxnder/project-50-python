@@ -3,15 +3,12 @@ import os
 from datetime import date, datetime
 
 
-class SpreadsheetEditor():
+class SpreadsheetInterface():
     def __init__(self):
         self.base_url = 'https://api.sheety.co/'
-        self.spreadsheet_info = os.environ['FLIGHT_SPREADSHEET']
+        self.spreadsheet_id = os.environ['FLIGHT_SPREADSHEET']
         self.sheety_token = os.environ['FLIGHT_SHEETY_TOKEN']
         self.today = date.today()
-        self.exercise = ''
-        self.duration = ''
-        self.calories = ''
 
     @staticmethod
     def time_converter(time):
@@ -31,7 +28,7 @@ class SpreadsheetEditor():
         else:
             return f'{minutes}:00'
 
-    def read(self):
+    def read(self, sheet_name):
         """
         Returns:
             Returns response from sheety API
@@ -40,22 +37,16 @@ class SpreadsheetEditor():
             'Authorization': 'Bearer ' + self.sheety_token
         }
 
-        payload = {
-            'price': {
-                'city': 'test',
-                'iataCode': 'TEST',
-                'lowestPrice': 55,
-            }
-        }
         try:
-            response = requests.get(url=self.base_url + self.spreadsheet_info, headers=headers, json=payload)
+            response = requests.get(url=self.base_url + self.spreadsheet_id + sheet_name, headers=headers)
             response.raise_for_status()
             # print(response.json())
         except requests.exceptions.HTTPError as e:
             print('Http Error', e)
-        return response.json()
+        data = response.json()[sheet_name]
+        return data
 
-    def update_iata_codes(self, row, code):
+    def update_iata_codes(self, row, code, sheet_name):
         """
         Returns:
             Returns response from sheety API
@@ -68,10 +59,29 @@ class SpreadsheetEditor():
             'price': {
                 'iataCode': code,
 
+            }
+        }
+
+        response = requests.put(url=self.base_url + self.spreadsheet_id + sheet_name + '/' + str(row), headers=headers,
+                                json=payload)
+        print(response.json())
+        return response
+
+    def add_users(self, first_name, last_name, email, sheet_name):
+
+        headers = {
+            'Authorization': 'Bearer ' + self.sheety_token
+        }
+
+        payload = {
+            'user': {
+                'firstName': first_name,
+                'lastName': last_name,
+                'email': email
 
             }
         }
 
-        response = requests.put(url=self.base_url + self.spreadsheet_info + '/'+str(row), headers=headers, json=payload)
+        response = requests.post(url=self.base_url + self.spreadsheet_id + sheet_name, headers=headers, json=payload)
         print(response.json())
         return response
