@@ -1,15 +1,16 @@
 from flight_checker import *
 from spreadsheet_editor import *
 from datetime import date, timedelta
+from message_sender import *
 
 flight_checker = FlightChecker()
 
-
 spreadsheet_editor = SpreadsheetEditor()
 spreadhseet_data = spreadsheet_editor.read()
+message_sender = MessageSender()
 
 TODAY = date.today().strftime("%d/%m/%Y")
-SIX_MONTHS = (date.today() + timedelta(days=6*30)).strftime("%d/%m/%Y")
+SIX_MONTHS = (date.today() + timedelta(days=6 * 30)).strftime("%d/%m/%Y")
 FLIGHTS_SPREADSHEET = spreadhseet_data['prices']
 ORIGIN_IATA = 'PHL'
 
@@ -25,8 +26,6 @@ ORIGIN_IATA = 'PHL'
 for cell in FLIGHTS_SPREADSHEET:
     flight_checker.get_prices(ORIGIN_IATA, cell['iataCode'], TODAY, SIX_MONTHS)
 
-
-
 for cell in FLIGHTS_SPREADSHEET:
     spreadsheet_price = cell['lowestPrice']
     try:
@@ -35,5 +34,6 @@ for cell in FLIGHTS_SPREADSHEET:
         print('Sorry, no price for that')
     else:
         if new_price < spreadsheet_price:
-            print('FOUND LOWER PRICE')
+            message_sender.message += f'Only ${new_price} to fly from {ORIGIN_IATA} to {cell["iataCode"]}\n'
 
+message_sender.send_message()
