@@ -9,10 +9,10 @@ class MessageSender:
         self.password = os.environ['SMTLIB_PASSWORD']
         self.message = ''
 
-    def send_message(self):
+    def send_message(self, recipient):
         body = self.message.encode('utf-8')
         sender = self.sender
-        recipient = self.recipient
+        recipient = recipient
         password = self.password
         connection = smtplib.SMTP("smtp.gmail.com", port=587)
         connection.starttls()
