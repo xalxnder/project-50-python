@@ -10,24 +10,6 @@ class SpreadsheetInterface():
         self.sheety_token = os.environ['FLIGHT_SHEETY_TOKEN']
         self.today = date.today()
 
-    @staticmethod
-    def time_converter(time):
-        """
-
-        Args:
-            time: Exercise duration in minutes
-
-        Returns:
-            Time formatted as mm:ss or hh:mm:ss
-
-        """
-        hours = int(time) // 60
-        minutes = int(time) % 60
-        if time > 60:
-            return f'{hours}:{minutes:02}:00'
-        else:
-            return f'{minutes}:00'
-
     def read(self, sheet_name):
         """
         Returns:
@@ -68,6 +50,16 @@ class SpreadsheetInterface():
         return response
 
     def add_users(self, first_name, last_name, email, sheet_name):
+        """
+        Args:
+            first_name:
+            last_name:
+            email:
+            sheet_name:
+
+        Returns:
+            Dict: Response from sheety API
+        """
 
         headers = {
             'Authorization': 'Bearer ' + self.sheety_token
@@ -81,7 +73,13 @@ class SpreadsheetInterface():
 
             }
         }
-
-        response = requests.post(url=self.base_url + self.spreadsheet_id + sheet_name, headers=headers, json=payload)
-        print(response.json())
-        return response
+        try:
+            response = requests.post(url=self.base_url + self.spreadsheet_id + sheet_name, headers=headers,
+                                     json=payload)
+            response.raise_for_status()
+            print(response.json())
+        except requests.exceptions.HTTPError as e:
+            print('Http Error', e)
+        else:
+            print(response.json())
+            return response
