@@ -8,6 +8,4 @@ song_scraper = SongScraper()
 # spotify_interface.request_access_token()
 # spotify_interface.get_tracks()
 
-print(song_scraper.get_artist_name())
-
-
+song_info = song_scraper.get_song_info()

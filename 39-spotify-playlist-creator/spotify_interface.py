@@ -75,11 +75,7 @@ class SpotifyInterface:
         print(response.json())
         return response.json()
 
-    def get_tracks(self):
-        auth_header = {
-            'Authorization': 'Bearer ' + self.access_token}
-        response = requests.get('https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V', headers=auth_header)
-        print(response.json())
+
 
     def get_refresh_token(self):
         """
@@ -104,5 +100,8 @@ class SpotifyInterface:
 
         response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
         return response.json()['access_token']
+
+    def search(self):
+        pass
 
 
