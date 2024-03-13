@@ -32,6 +32,11 @@ class SpotifyInterface:
         return auth_header
 
     def request_authorization(self):
+        """
+        Request authorization from the user to access their Spotify account.
+        Returns:
+            str: The URL to the redirect uri which contains the code needed to obtain an access token.
+        """
         parameters = {
             'client_id': self.CLIENT_ID,
             'response_type': 'code',
@@ -44,6 +49,12 @@ class SpotifyInterface:
         return response.url
 
     def request_access_token(self):
+        """
+        Request an access token from Spotify using the code obtained from the request_authorization method.
+        Returns:
+            dict: A dictionary containing the access token and refresh token.
+
+        """
         message = f"{self.CLIENT_ID}:{self.CLIENT_SECRET}"
         message_bytes = message.encode("ascii")
         base64_bytes = base64.b64encode(message_bytes)
@@ -52,7 +63,6 @@ class SpotifyInterface:
 
         body = {
             'grant_type': 'authorization_code',
-            # YOU CAN ONLY USE CODE ONCE.#
             'code': self.CODE,
             'redirect_uri': 'https://example.com',
         }
@@ -72,6 +82,12 @@ class SpotifyInterface:
         print(response.json())
 
     def get_refresh_token(self):
+        """
+        Get a new access token using the refresh token.
+        Returns:
+            str: The new access token.
+
+        """
         message = f"{self.CLIENT_ID}:{self.CLIENT_SECRET}"
         message_bytes = message.encode("ascii")
         base64_bytes = base64.b64encode(message_bytes)
