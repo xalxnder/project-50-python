@@ -14,6 +14,7 @@ class SpotifyInterface:
         self.CODE = os.environ.get('CODE')
         self.STATE = os.environ.get('STATE')
         self.refresh_token = os.environ.get('SPOTIFY_REFRESH_TOKEN')
+        self.playlist_id = os.environ.get('SPOTIFY_PLAYLIST_ID')
         self.access_token = self.get_refresh_token()
 
     # Generate a random string for the state parameter
@@ -75,8 +76,6 @@ class SpotifyInterface:
         print(response.json())
         return response.json()
 
-
-
     def get_refresh_token(self):
         """
         Get a new access token using the refresh token.
@@ -101,7 +100,29 @@ class SpotifyInterface:
         response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
         return response.json()['access_token']
 
-    def search(self):
-        pass
+    def get_song_uri(self, artist, song):
+        headers = {
+            'Authorization': 'Bearer ' + self.access_token}
+        parameters = {
+            'q': artist + ' ' + song,
+            'type': 'track',
+            'limit': 1
+        }
+        response = requests.get('https://api.spotify.com/v1/search', headers=headers, params=parameters)
+        track_uri = response.json()['tracks']['items'][0]['uri']
+        print(response)
+        return track_uri
 
+    def update_playlist(self, track_uris):
+        headers = {
+            'Authorization': 'Bearer ' + self.access_token,
+            'Content-Type': 'application/json'
+        }
+
+        data = {
+            'uris': track_uris,
+        }
+
+        response = requests.put(f'https://api.spotify.com/v1/playlists/{self.playlist_id}/tracks', headers=headers, json=data)
+        print(response.json())
 
