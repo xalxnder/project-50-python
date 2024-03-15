@@ -3,6 +3,7 @@ import os
 import random
 import string
 import base64
+
 import webbrowser
 
 
@@ -15,12 +16,32 @@ class SpotifyInterface:
         self.STATE = os.environ.get('STATE')
         self.refresh_token = os.environ.get('SPOTIFY_REFRESH_TOKEN')
         self.playlist_id = os.environ.get('SPOTIFY_PLAYLIST_ID')
-        self.access_token = self.get_refresh_token()
+        self.access_token = os.environ.get('SPOTIFY_ACCESS_TOKEN')
 
     # Generate a random string for the state parameter
     def generate_state(self):
         length = 10
         return ''.join(random.choice(string.ascii_letters) for i in range(length))
+
+    def is_authorized(self):
+        headers = {
+            'Authorization': 'Bearer ' + self.access_token
+        }
+        try:
+            response = requests.get('https://api.spotify.com/v1/me', headers=headers)
+            response_json = response.json()
+            if 'error' in response_json:
+                print(response_json['error']['message'])
+                return False
+            else:
+                print('Success!')
+                return True
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return False
+
+
+
 
     def get_auth_base64(self):
         """Used to encode our Client ID and Client Secret when retriving your refresh token"""
@@ -36,7 +57,7 @@ class SpotifyInterface:
         """
         Request authorization from the user to access their Spotify account.
         Returns:
-            str: The URL to the redirect uri which contains the code needed to obtain an access token.
+            str: The URL to Spotify Authorization page.
         """
         parameters = {
             'client_id': self.CLIENT_ID,
@@ -45,9 +66,13 @@ class SpotifyInterface:
             'redirect_uri': 'https://example.com',
             'scope': 'playlist-modify-private playlist-modify-public playlist-read-private'
         }
-        response = requests.get(self.AUTH_URL, params=parameters)
-        print(response.url)
-        return response.url
+        try:
+            response = requests.get(self.AUTH_URL, params=parameters)
+            print(f'Please click the following url to authorize this app: {response.url}')
+            return response.url
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
 
     def request_access_token(self):
         """
@@ -60,7 +85,6 @@ class SpotifyInterface:
         message_bytes = message.encode("ascii")
         base64_bytes = base64.b64encode(message_bytes)
         base64_message = base64_bytes.decode("ascii")
-        print(base64_message)
 
         body = {
             'grant_type': 'authorization_code',
@@ -72,9 +96,17 @@ class SpotifyInterface:
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-        response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
-        print(response.json())
-        return response.json()
+        try:
+            response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
+            if 'error' in response.json():
+                print(response.json().get('error'))
+                return None
+            else:
+                print(response.json())
+                return response.json()
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
 
     def get_refresh_token(self):
         """
@@ -109,9 +141,17 @@ class SpotifyInterface:
             'limit': 1
         }
         response = requests.get('https://api.spotify.com/v1/search', headers=headers, params=parameters)
-        track_uri = response.json()['tracks']['items'][0]['uri']
-        print(response)
-        return track_uri
+        try:
+            track_uri = response.json()['tracks']['items'][0]['uri']
+            print(response)
+            return track_uri
+        except KeyError as e:
+            print('wrong')
+            print(f'Unable to find the {e} key.')
+            return None
+        except Exception as e:
+            print(f'Unexpected error: {e}')
+            return None
 
     def update_playlist(self, track_uris):
         headers = {
