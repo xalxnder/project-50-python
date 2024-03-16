@@ -23,26 +23,6 @@ class SpotifyInterface:
         length = 10
         return ''.join(random.choice(string.ascii_letters) for i in range(length))
 
-    def is_authorized(self):
-        headers = {
-            'Authorization': 'Bearer ' + self.access_token
-        }
-        try:
-            response = requests.get('https://api.spotify.com/v1/me', headers=headers)
-            response_json = response.json()
-            if 'error' in response_json:
-                print(response_json['error']['message'])
-                return False
-            else:
-                print('Success!')
-                return True
-        except requests.exceptions.RequestException as e:
-            print(e)
-            return False
-
-
-
-
     def get_auth_base64(self):
         """Used to encode our Client ID and Client Secret when retriving your refresh token"""
         message = f"{self.CLIENT_ID}:{self.CLIENT_SECRET}"
@@ -54,6 +34,7 @@ class SpotifyInterface:
         return auth_header
 
     def request_authorization(self):
+        print('Requesting authorization...')
         """
         Request authorization from the user to access their Spotify account.
         Returns:
@@ -68,13 +49,14 @@ class SpotifyInterface:
         }
         try:
             response = requests.get(self.AUTH_URL, params=parameters)
-            print(f'Please click the following url to authorize this app: {response.url}')
+            print(f'Please click the following url to authorize this app. Once redirected, save the CODE: {response.url}')
             return response.url
         except requests.exceptions.RequestException as e:
             print(e)
             return None
 
     def request_access_token(self):
+        print('Requesting access token...')
         """
         Request an access token from Spotify using the code obtained from the request_authorization method.
         Returns:
@@ -95,7 +77,6 @@ class SpotifyInterface:
             "Authorization": "Basic" + " " + base64_message,
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-
         try:
             response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
             if 'error' in response.json():
@@ -128,9 +109,17 @@ class SpotifyInterface:
             "Authorization": "Basic" + " " + base64_message,
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-
-        response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
-        return response.json()['access_token']
+        try:
+            response = requests.post('https://accounts.spotify.com/api/token', data=body, headers=headers)
+            if 'error' in response.json():
+                print(response.json().get('error'))
+                return None
+            else:
+                print(response.json())
+                return response.json()['access_token']
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return None
 
     def get_song_uri(self, artist, song):
         headers = {
