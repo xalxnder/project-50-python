@@ -5,27 +5,15 @@ import webbrowser
 spotify_interface = SpotifyInterface()
 song_scraper = SongScraper()
 
-
-
-if spotify_interface.is_authorized():
-    pass
-else:
+user_input = input('Have you already authorized this app? (yes/no)')
+if user_input == 'no':
     spotify_interface.request_authorization()
-    spotify_interface.request_access_token()
+else:
+    access_token_check = input('Do you have an access token? (yes/no)')
+    if access_token_check == 'no':
+        spotify_interface.request_access_token()
+    else:
+        song_info = song_scraper.get_song_info()
+        track_uris = [spotify_interface.get_song_uri(song['Artist'], song['Song']) for i, song in enumerate(song_info) if i < 10]
+        spotify_interface.update_playlist(track_uris)
 
-
-# spotify_interface.request_authorization()
-# spotify_interface.request_access_token()
-
-# song_info = song_scraper.get_song_info()
-# print(song_info[0]['Artist'])
-# print(song_info[0]['Song'])
-
-# spotify_interface.get_song_uri(song_info[0]['Artist'], song_info[0]['Song'])
-# track_uris = [spotify_interface.get_song_uri(song['Artist'], song['Song']) for song in song_info]
-# track_uris = [spotify_interface.get_song_uri(song['Artist'], song['Song']) for i, song in enumerate(song_info) if i < 10]
-#
-# print(track_uris)
-
-
-# spotify_interface.update_playlist(track_uris)
