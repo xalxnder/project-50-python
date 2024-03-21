@@ -18,7 +18,7 @@ language.click()
 
 five_second_check = time.time() + 5
 
-end_time = time.time() + 10
+end_time = time.time() + 5
 
 while True:
     try:
@@ -59,6 +59,8 @@ while True:
 
         # End the game after the specified end_time
         if time.time() > end_time:
-            print(count.text)
+            print('Stats:')
+            print(f"Cookie Count: {count.text.split(' ')[0]}")
+            print(f"Click Rate: {count.text.split(' ')[3]} cookies per second")
 
             break
