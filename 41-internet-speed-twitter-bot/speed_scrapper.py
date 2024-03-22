@@ -20,3 +20,5 @@ WebDriverWait(driver, 100).until(lambda driver: driver.find_element(By.CSS_SELEC
 upload_speed = driver.find_element(By.CSS_SELECTOR, '.upload-speed')
 download_speed = driver.find_element(By.CSS_SELECTOR, '.download-speed')
 print(download_speed.text)
+print(upload_speed.text)
+
