@@ -9,14 +9,12 @@
     {% endblock %}
 </head>
 <body>
-    {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 
+{% include 'footer.html' %}
 
 </body>
-<footer>
-    {% block footer %}
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    {% endblock %}
-</footer>
+
+
+
 </html>
