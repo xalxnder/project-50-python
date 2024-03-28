@@ -20,3 +20,13 @@ def get_post(post_id):
         if p['id'] == post_id:
             post = p
     return render_template('post.html', post=post)
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
