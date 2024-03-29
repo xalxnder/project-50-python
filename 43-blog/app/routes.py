@@ -1,6 +1,7 @@
-from flask import render_template, redirect
+from flask import render_template, request
 import requests
 from app import app
+from app.message_sender import *
 
 
 @app.route('/')
@@ -9,6 +10,7 @@ def index():
     response = requests.get(blog_post_data)
     posts = response.json()
     return render_template('index.html', posts=posts)
+
 
 @app.route('/post/<int:post_id>')
 def get_post(post_id):
@@ -27,6 +29,18 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/contact')
+@app.route('/contact', methods=['POST', 'GET'])
 def contact():
-    return render_template('contact.html')
+    method = request.method
+    if method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+        message = request.form['message']
+        sender = MessageSender(message, email)
+        sender.send_message()
+
+    return render_template('contact.html', method=method)
+
+
+

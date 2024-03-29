@@ -23,13 +23,12 @@
             {% for post in posts %}
 
             <div class="post-preview">
-                <a href="post.html">
+                <a href="post/{{ post.id }}">
                     <h2 class="post-title">{{ post.title }}</h2>
                     <h3 class="post-subtitle">{{ post.subtitle }}</h3>
                 </a>
                 <p class="post-meta">
-                    <a href="post/{{ post.id }}">Read</a>
-                    on September 24, 2023
+                    September 24, 2023
                 </p>
             </div>
             <!-- Divider-->
