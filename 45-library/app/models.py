@@ -10,4 +10,4 @@ class Books(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(unique=True, nullable=False)
     author: Mapped[str] = mapped_column(String(250))
-    rating: Mapped[str] = mapped_column()
+    rating: Mapped[int] = mapped_column(Integer)

@@ -2,7 +2,6 @@ from flask import render_template, request, redirect
 from . import app, models, db
 
 
-
 @app.route('/')
 def index():
     all_books = models.Books.query.order_by(models.Books.title).all()
@@ -13,10 +12,14 @@ def index():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
+    method = request.method
     book_id = request.args.get('id')
     book = models.Books.query.get(book_id)
-
-    print(book_id)
+    if method == 'POST':
+        new_rating = request.form['current-rating']
+        book.rating = new_rating
+        db.session.commit()
+        return redirect('/')
 
     return render_template('edit.html', book=book)
 
