@@ -4,6 +4,12 @@ from . import app, models, db
 
 @app.route('/')
 def index():
+    method = request.method
+    book_id = request.args.get('id')
+    if book_id:
+        book = models.Books.query.get(book_id)
+        db.session.delete(book)
+        db.session.commit()
     all_books = models.Books.query.order_by(models.Books.title).all()
     for book in all_books:
         print(book.author)
