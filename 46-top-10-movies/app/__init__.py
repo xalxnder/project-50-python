@@ -1,17 +1,21 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from . import models
-from . import routes, models
+from flask_bootstrap import Bootstrap5
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
+bootstrap = Bootstrap5(app)
+
+db = SQLAlchemy(app)
+from . import routes
 
 
-"""
-Only need this section if utilizing a database. 
+from. import models
 
- app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db_name.db"
- db = SQLAlchemy(app)
- with app.app_context():
-     db.create_all()
 
-"""
+with app.app_context():
+    db.create_all()
+
+
+
+

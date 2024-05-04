@@ -3,5 +3,5 @@ from sqlalchemy import Integer, String, Float
 from . import db
 
 
-class Test(db.Model):
-    pass
+# class Test(db.Model):
+#     pass
