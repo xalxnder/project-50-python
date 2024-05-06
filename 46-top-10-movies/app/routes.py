@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect
 from . import app, models, db
 from flask_wtf import FlaskForm
 from wtforms import *
@@ -25,11 +25,24 @@ def index():
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
     form = EditForm()
-    method = request.method
     movie_id = request.args.get('id')
     movies = models.Movies.query.get(movie_id)
-
-    if method == 'POST':
+    if form.validate_on_submit():
         new_rating = request.form['new_rating']
+        new_review = request.form['new_review']
+        movies.rating = new_rating
+        movies.review = new_review
+        db.session.commit()
+        return redirect('/')
         print(new_rating)
     return render_template('edit.html', form=form, movies=movies)
+
+
+@app.route('/delete')
+def delete():
+    movie_id = request.args.get('id')
+    movies = models.Movies.query.get(movie_id)
+    db.session.delete(movies)
+    db.session.commit()
+
+    return render_template('index.html', movies=movies)
