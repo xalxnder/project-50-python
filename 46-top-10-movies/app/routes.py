@@ -12,6 +12,11 @@ class EditForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class AddForm(FlaskForm):
+    movie_title = StringField('Movie Title', validators=[DataRequired()])
+    submit = SubmitField('Add Movie')
+
+
 @app.route('/')
 def index():
     all_movies = models.Movies.query.order_by(models.Movies.id).all()
@@ -20,6 +25,14 @@ def index():
 
     print('here')
     return render_template('index.html', all_movies=all_movies)
+
+
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    add_form = AddForm()
+    if add_form.validate_on_submit():
+        return redirect('/')
+    return render_template('add.html', form=add_form )
 
 
 @app.route('/edit', methods=['GET', 'POST'])
