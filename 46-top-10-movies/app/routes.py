@@ -3,6 +3,9 @@ from . import app, models, db
 from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms.validators import *
+from movie_search import MovieAPI
+
+movie_api =MovieAPI()
 
 
 class EditForm(FlaskForm):
