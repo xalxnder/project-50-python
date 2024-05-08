@@ -21,10 +21,27 @@ class MovieAPI():
         results = response['results']
         cleaned_up_results = [{
             'title': movie['original_title'],
-            'image_url': f'https://image.tmdb.org/t/p/w500/{movie["poster_path"]}',
             'year': movie['release_date'].split('-')[0],
-            'description': movie['overview'],
             'id': movie['id']
         } for movie in results]
         print(cleaned_up_results)
         return cleaned_up_results
+
+    def get_movie_details(self, movie_id):
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?language=en-US"
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {self.API_KEY}"
+        }
+
+        response = requests.get(url, headers=headers).json()
+        results = {
+            'title': response['original_title'],
+            'image_url': f'https://image.tmdb.org/t/p/w500/{response["poster_path"]}',
+            'year': response['release_date'].split('-')[0],
+            'description': response['overview'],
+        }
+        return results
+
+
+
