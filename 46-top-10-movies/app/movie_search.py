@@ -41,6 +41,7 @@ class MovieAPI():
             'year': response['release_date'].split('-')[0],
             'description': response['overview'],
         }
+        print(results)
         return results
 
 
