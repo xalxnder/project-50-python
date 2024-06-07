@@ -86,5 +86,4 @@ def delete():
     movies = models.Movies.query.get(movie_id)
     db.session.delete(movies)
     db.session.commit()
-
-    return render_template('index.html', movies=movies)
+    return redirect('/')
